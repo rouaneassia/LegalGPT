@@ -1,0 +1,37 @@
+# Laravel
+legal-gpt-backend/.env
+legal-gpt-backend/.env.*
+!legal-gpt-backend/.env.example
+
+legal-gpt-backend/vendor/
+legal-gpt-backend/storage/logs/*
+legal-gpt-backend/storage/framework/cache/*
+legal-gpt-backend/storage/framework/sessions/*
+legal-gpt-backend/storage/framework/views/*
+legal-gpt-backend/bootstrap/cache/*
+legal-gpt-backend/public/storage
+
+# Downloaded legal PDFs
+legal-gpt-backend/storage/app/private/legal/*
+
+# React
+legal-gpt-frontend/node_modules/
+legal-gpt-frontend/dist/
+legal-gpt-frontend/build/
+legal-gpt-frontend/.env
+legal-gpt-frontend/.env.*
+!legal-gpt-frontend/.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

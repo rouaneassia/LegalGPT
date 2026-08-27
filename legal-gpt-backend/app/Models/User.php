@@ -7,11 +7,12 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',   // ضروري تزيد هادي
+        'status', // وضروري تزيد هادي
+        'last_login_at',
     ];
 
     /**
@@ -46,4 +50,28 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function chats()
+{
+    return $this->hasMany(Chat::class);
+}
+
+public function generatedDocuments()
+{
+    return $this->hasMany(GeneratedDocument::class);
+}
+
+public function favorites()
+{
+    return $this->hasMany(Favorite::class);
+}
+
+public function folders()
+{
+    return $this->hasMany(Folder::class);
+}
+///user
+public function documents()
+{
+    return $this->hasMany(UserDocument::class);
+}
 }
