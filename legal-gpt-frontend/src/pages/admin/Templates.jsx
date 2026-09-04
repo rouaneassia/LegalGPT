@@ -62,91 +62,125 @@ export default function Templates() {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-2">Templates</h1>
-            <p className="text-gray-600 mb-6">إدارة قوالب الوثائق القانونية</p>
-
-            {/* نموذج إضافة قالب */}
-            <div className="bg-white p-6 rounded-xl shadow mb-8">
-                <h2 className="text-xl font-semibold mb-4">إضافة قالب جديد</h2>
-                <form onSubmit={handleCreateTemplate} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">عنوان القالب</label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                            className="w-full border rounded-lg px-4 py-2 bg-white"
-                            placeholder="مثال: عقد نزاع دستوري..."
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
-                        <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="w-full border rounded-lg px-4 py-2 bg-white"
-                            placeholder="وصف مختصر للقالب..."
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
-                    >
-                        حفظ القالب
-                    </button>
-                </form>
+        <div className="p-8 max-w-7xl mx-auto space-y-8 min-h-screen" style={{ backgroundColor: '#EBE9E4' }}>
+            
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl shadow-sm border border-[#3D5A4C]/10">
+                <div>
+                    <h1 className="text-xl font-bold text-[#3D5A4C] tracking-tight">إدارة قوالب الوثائق القانونية</h1>
+                    <p className="text-sm text-slate-500 mt-1">إنشاء وتنسيق الهياكل القانونية والأقسام التابعة لها بسهولة واحترافية</p>
+                </div>
+                <div className="flex items-center gap-2 bg-[#3D5A4C]/10 px-4 py-2 rounded-xl text-[#3D5A4C] text-xs font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-[#3D5A4C] animate-pulse"></span>
+                    {templates.length} قوالب متوفرة حالياً
+                </div>
             </div>
 
-            {/* جدول عرض القوالب */}
-            <div className="bg-white rounded-xl shadow overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                    <thead className="bg-gray-100 border-b">
-                        <tr>
-                            <th className="p-4 font-semibold">ID</th>
-                            <th className="p-4 font-semibold">Title</th>
-                            <th className="p-4 font-semibold">Description</th>
-                            <th className="p-4 font-semibold">Sections Count</th>
-                            <th className="p-4 font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr>
-                                <td colSpan="5" className="p-6 text-center text-gray-500">جاري التحميل...</td>
-                            </tr>
-                        ) : templates.length > 0 ? (
-                            templates.map((template) => (
-                                <tr key={template.id} className="border-b hover:bg-gray-50">
-                                    <td className="p-4">{template.id}</td>
-                                    <td className="p-4 font-medium">{template.title}</td>
-                                    <td className="p-4 text-sm text-gray-600">{template.description || "N/A"}</td>
-                                    <td className="p-4">{template.sections?.length || 0} أقسام</td>
-                                    <td className="p-4 space-x-2 flex items-center">
-                                        {/* زر الانتقال لصفحة Template Sections مع تحديد الـ ID تلقائياً */}
-                                        <button
-                                            onClick={() => navigate(`/admin/template-sections`, { state: { templateId: template.id } })}
-                                            className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
-                                        >
-                                            الأقسام
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(template.id)}
-                                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
+            {/* Layout Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                {/* Form Section */}
+                <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-[#3D5A4C]/10 h-fit">
+                    <div className="border-b border-slate-100 pb-4 mb-5">
+                        <h2 className="text-base font-bold text-slate-800">إضافة قالب جديد</h2>
+                        <p className="text-xs text-slate-400 mt-0.5">أدخل تفاصيل القالب القانوني الجديد</p>
+                    </div>
+
+                    <form onSubmit={handleCreateTemplate} className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-bold text-slate-700 mb-1.5">عنوان القالب</label>
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3D5A4C]/20 focus:border-[#3D5A4C] transition-all"
+                                placeholder="مثال: عقد نزاع دستوري..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-slate-700 mb-1.5">الوصف المختصر</label>
+                            <textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={3}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3D5A4C]/20 focus:border-[#3D5A4C] transition-all resize-none"
+                                placeholder="وصف موجز يوضح الغرض من القالب..."
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full py-3 text-white rounded-xl text-sm font-semibold shadow-md transition-all flex items-center justify-center gap-2 hover:opacity-95"
+                            style={{ backgroundColor: '#3D5A4C' }}
+                        >
+                            حفظ القالب الجديد
+                        </button>
+                    </form>
+                </div>
+
+                {/* Table Section */}
+                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-[#3D5A4C]/10 overflow-hidden flex flex-col">
+                    <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">قائمة القوالب القانونية</h3>
+                        <span className="text-xs text-slate-400">إجمالي السجلات: {templates.length}</span>
+                    </div>
+
+                    <div className="overflow-x-auto flex-1">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b text-xs uppercase tracking-wider text-slate-600 bg-slate-50 font-semibold">
+                                    <th className="p-4">ID</th>
+                                    <th className="p-4">Title</th>
+                                    <th className="p-4">Description</th>
+                                    <th className="p-4">Sections Count</th>
+                                    <th className="p-4 text-center">Actions</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="5" className="p-6 text-center text-gray-500">لا توجد قوالب متاحة حالياً.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 text-sm">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan="5" className="p-8 text-center text-slate-400">جاري التحميل...</td>
+                                    </tr>
+                                ) : templates.length > 0 ? (
+                                    templates.map((template) => (
+                                        <tr key={template.id} className="hover:bg-slate-50/60 transition-colors">
+                                            <td className="p-4 font-mono text-xs text-slate-500">#{template.id}</td>
+                                            <td className="p-4 font-semibold text-slate-900">{template.title}</td>
+                                            <td className="p-4 text-xs text-slate-600 max-w-xs truncate">{template.description || "N/A"}</td>
+                                            <td className="p-4">
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#3D5A4C]/10 text-[#3D5A4C]">
+                                                    {template.sections?.length || 0} أقسام
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button
+                                                        onClick={() => navigate(`/admin/template-sections`, { state: { templateId: template.id } })}
+                                                        className="px-3 py-1.5 text-white rounded-lg text-xs font-medium transition-all shadow-sm hover:opacity-90"
+                                                        style={{ backgroundColor: '#4D6658' }}
+                                                    >
+                                                        الأقسام
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(template.id)}
+                                                        className="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-medium hover:bg-rose-700 transition-all shadow-sm"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5" className="p-12 text-center text-slate-400">لا توجد قوالب متاحة حالياً.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

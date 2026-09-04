@@ -10,6 +10,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Services\AI\OpenAIService;
 use App\Services\PromptService;
+use App\Services\FolderAssignmentService;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 
@@ -17,11 +18,17 @@ class DocumentGenerationController extends Controller
 {
     protected OpenAIService $aiService;
     protected PromptService $promptService;
+    protected FolderAssignmentService $folderAssignmentService;
 
-    public function __construct(OpenAIService $aiService, PromptService $promptService)
+    public function __construct(
+        OpenAIService $aiService,
+        PromptService $promptService,
+        FolderAssignmentService $folderAssignmentService
+    )
     {
         $this->aiService = $aiService;
         $this->promptService = $promptService;
+        $this->folderAssignmentService = $folderAssignmentService;
     }
 
     public function generate(Request $request)
@@ -116,7 +123,11 @@ PROMPT;
                     'title' => mb_substr($userPrompt, 0, 30) . '...'
                 ]);
                 $chatId = $chat->id;
+            } else {
+                $chat = Chat::where('user_id', $userId)->findOrFail($chatId);
             }
+
+            $this->folderAssignmentService->assign($chat, $userPrompt, $userId);
 
             if (class_exists(Message::class)) {
                 Message::create([

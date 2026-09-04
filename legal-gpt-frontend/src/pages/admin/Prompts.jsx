@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../services/api'; // ⬅️ Koun m-t2akkad mn l-chemin dyal fichier api dyalk (e.g. '../api' wla './api')
+import API from '../../services/api';
 
 export default function Prompts() {
     const [prompts, setPrompts] = useState([]);
@@ -21,7 +21,6 @@ export default function Prompts() {
         }
     };
 
-    // دالة لتحديث القيمة محلياً في الـ State ملي كيتبدل شي input
     const handleFieldChange = (id, field, value) => {
         setPrompts(prevPrompts =>
             prevPrompts.map(item =>
@@ -30,7 +29,6 @@ export default function Prompts() {
         );
     };
 
-    // دالة الحفظ وإرسال الطلب PUT للسيرفر
     const handleSave = async (prompt) => {
         try {
             setMessage('');
@@ -42,90 +40,107 @@ export default function Prompts() {
             });
 
             console.log("Saved successfully:", response.data);
-            setMessage(`تم حفظ التعديلات بنجاح للـ Prompt: ${prompt.key} ✅`);
+            setMessage(`Modifications enregistrées avec succès pour le prompt : ${prompt.key} ✅`);
             
             setTimeout(() => {
                 setMessage('');
             }, 4000);
         } catch (error) {
             console.error("Error saving prompt:", error);
-            setMessage('خطأ أثناء حفظ التعديلات ❌');
+            setMessage('Erreur lors de l’enregistrement des modifications ❌');
         }
     };
 
-    if (loading) return <div className="p-8 text-white text-center">جاري التحميل...</div>;
+    if (loading) return (
+        <div className="flex justify-center items-center min-h-screen text-xs font-semibold" style={{ backgroundColor: '#EBE9E4', color: '#3D5A4C' }}>
+            Chargement en cours...
+        </div>
+    );
 
     return (
-        <div className="p-6 bg-slate-950 text-white min-h-screen" dir="auto">
-            <h1 className="text-2xl font-bold mb-6">⚙️ إدارة وتعديل الـ Prompts</h1>
+        <div className="pt-24 px-6 pb-12 max-w-5xl mx-auto space-y-6 text-sm" style={{ backgroundColor: '#EBE9E4', minHeight: '100vh' }}>
+            
+            {/* Header Section */}
+            <div className="flex items-center justify-between  px-6 py-5 rounded-xl shadow-sm border border-[#3D5A4C]/10">
+                <div>
+                    <h1 className="text-base font-bold text-[#3D5A4C]">Gestion et Configuration des Prompts</h1>
+                    <p className="text-xs text-slate-400 mt-0.5">Paramétrez les instructions système et les comportements de l'IA</p>
+                </div>
+                <div className="bg-[#3D5A4C]/10 px-3.5 py-1.5 rounded-lg text-[#3D5A4C] font-semibold text-xs flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#3D5A4C] animate-pulse"></span>
+                    {prompts.length} prompt(s)
+                </div>
+            </div>
 
-            {/* رسالة النجاح أو الخطأ */}
+            {/* Notification Message */}
             {message && (
-                <div className="mb-6 p-4 bg-blue-600 text-white rounded-lg shadow-md font-medium">
-                    {message}
+                <div className="p-4 rounded-xl shadow-sm font-semibold text-xs text-white flex items-center gap-2" style={{ backgroundColor: '#3D5A4C' }}>
+                    <span>{message}</span>
                 </div>
             )}
             
-            <div className="space-y-6">
+            {/* Prompts List */}
+            <div className="space-y-4">
                 {prompts.map((item) => (
-                    <div key={item.id} className="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-md">
+                    <div key={item.id} className="bg-white p-6 rounded-xl border border-[#3D5A4C]/10 shadow-sm space-y-4 transition-all hover:shadow-md">
                         
-                        {/* العنوان والرمايز */}
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                            <div className="w-full md:w-1/2">
-                                <label className="text-xs text-slate-400 block mb-1">العنوان (Title):</label>
+                        {/* Title and Status Header */}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div className="w-full md:w-3/4">
+                                <label className="block text-xs font-bold text-slate-700 mb-1">Titre (Title)</label>
                                 <input
                                     type="text"
                                     value={item.title}
                                     onChange={(e) => handleFieldChange(item.id, 'title', e.target.value)}
-                                    className="w-full bg-slate-950 border border-slate-700 px-3 py-2 rounded text-white font-semibold focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#3D5A4C]"
                                 />
                             </div>
-                            <div className="flex items-center gap-4">
-                                <span className="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded border border-slate-700 font-mono">
+                            <div className="flex items-center gap-3 pt-2 md:pt-0">
+                                <span className="bg-[#EBE9E4] text-[#3D5A4C] text-xs px-3 py-1.5 rounded-lg border border-[#3D5A4C]/20 font-mono">
                                     {item.key}
                                 </span>
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
                                     <input
                                         type="checkbox"
                                         checked={Boolean(item.is_active)}
                                         onChange={(e) => handleFieldChange(item.id, 'is_active', e.target.checked ? 1 : 0)}
-                                        className="w-4 h-4 text-blue-600 rounded"
+                                        className="w-4 h-4 rounded text-[#3D5A4C] focus:ring-[#3D5A4C]"
                                     />
-                                    <span className="text-sm text-slate-300">مفعل</span>
+                                    <span className="text-xs font-semibold text-slate-700">Activé</span>
                                 </label>
                             </div>
                         </div>
 
-                        {/* الوصف */}
-                        <div className="mb-4">
-                            <label className="text-xs text-slate-400 block mb-1">الوصف (Description):</label>
+                        {/* Description */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-700 mb-1">Description</label>
                             <input
                                 type="text"
                                 value={item.description || ''}
                                 onChange={(e) => handleFieldChange(item.id, 'description', e.target.value)}
-                                className="w-full bg-slate-950 border border-slate-700 px-3 py-2 rounded text-sm text-slate-300 focus:outline-none focus:border-blue-500"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#3D5A4C]"
                             />
                         </div>
 
-                        {/* الـ System Prompt */}
-                        <div className="mb-4">
-                            <label className="text-xs text-slate-400 block mb-1">System Prompt:</label>
+                        {/* System Prompt */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-700 mb-1">System Prompt</label>
                             <textarea
-                                rows="4"
+                                rows={4}
                                 value={item.system_prompt}
                                 onChange={(e) => handleFieldChange(item.id, 'system_prompt', e.target.value)}
-                                className="w-full p-3 bg-slate-950 border border-slate-700 rounded text-sm text-slate-200 font-mono focus:outline-none focus:border-blue-500"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#3D5A4C] resize-none"
                             />
                         </div>
 
-                        {/* زر الحفظ */}
-                        <div className="flex justify-end">
+                        {/* Save Button */}
+                        <div className="flex justify-end pt-2 border-t border-slate-100">
                             <button
                                 onClick={() => handleSave(item)}
-                                className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition shadow-lg flex items-center gap-2"
+                                className="px-5 py-2 text-white rounded-lg text-xs font-semibold shadow-sm hover:opacity-90 transition-all flex items-center gap-2"
+                                style={{ backgroundColor: '#4D6658' }}
                             >
-                                حفظ التعديلات 💾
+                                Enregistrer 💾
                             </button>
                         </div>
 

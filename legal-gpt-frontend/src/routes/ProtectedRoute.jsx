@@ -7,19 +7,19 @@ export default function ProtectedRoute({ allowedRole }) {
     
     // Ila kan ma-m-connectich ga3, sifo3 l /login
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={allowedRole === 'admin' ? '/admin/login' : '/login'} replace />;
     }
 
     if (allowedRole) {
         try {
-            const user = JSON.parse(userString);
+            const user = userString ? JSON.parse(userString) : null;
             // Ila kan l-role makhlafch l-role li m-tlobo, rj3o l blasa m-nasba (ila kan user w bgha y-dkhol admin sifo3 l /chat)
-            if (user && user.role !== allowedRole) {
-                return <Navigate to={user.role === 'admin' ? '/admin' : '/chat'} replace />;
+            if (!user || user.role !== allowedRole) {
+                return <Navigate to={allowedRole === 'admin' ? '/admin/login' : '/chat'} replace />;
             }
         } catch (e) {
             console.error("Error parsing user from localStorage", e);
-            return <Navigate to="/login" replace />;
+            return <Navigate to={allowedRole === 'admin' ? '/admin/login' : '/login'} replace />;
         }
     }
 

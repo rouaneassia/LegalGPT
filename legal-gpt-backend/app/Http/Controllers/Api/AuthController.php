@@ -54,6 +54,35 @@ class AuthController extends Controller
         ]);
     }
 
+    public function adminLogin(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            return response()->json([
+                'message' => 'Email ou mot de passe incorrect.',
+            ], 401);
+        }
+
+        if ($user->role !== 'admin' || $user->status !== 'active') {
+            return response()->json([
+                'message' => 'Accès réservé aux administrateurs actifs.',
+            ], 403);
+        }
+
+        $token = $user->createToken('legalgpt-admin')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ]);
+    }
+
     public function profile(Request $request)
     {
         return response()->json($request->user());

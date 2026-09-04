@@ -5,6 +5,7 @@ import UserLayout from "../layouts/UserLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 import Login from "../pages/auth/Login";
+import AdminLogin from "../pages/auth/AdminLogin";
 import Register from "../pages/auth/Register";
 
 import Dashboard from "../pages/admin/Dashboard";
@@ -21,8 +22,9 @@ import GeneratedDocuments from "../pages/admin/GeneratedDocuments";
 
 import Chat from "../pages/user/ChatHome";
 import UserDocuments from "../pages/user/UserDocuments";
-// import UserFavorites from "../pages/user/UserFavorites";
-// import UserFolders from "../pages/user/UserFolders";
+import UserFavorites from "../pages/user/UserFavorites";
+import UserFolders from "../pages/user/UserFolders";
+import FolderView from "../pages/user/FolderView";
 
 export default function AppRoutes() {
     return (
@@ -30,6 +32,7 @@ export default function AppRoutes() {
             <Routes>
                 {/* Auth */}
                 <Route path="/login" element={<Login />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/register" element={<Register />} />
 
                 {/* User & Public Chat (ChatGPT Style) */}
@@ -38,10 +41,13 @@ export default function AppRoutes() {
                     <Route path="chat" element={<Chat />} />
                     <Route path="chat/:chatId" element={<Chat />} />
                     
-                    {/* User Documents */}
-                   <Route path="/documents" element={<UserDocuments />} />
-                    {/* <Route path="user/favorites" element={<UserFavorites />} /> */}
-                    {/* <Route path="user/folders" element={<UserFolders />} /> */}
+                    {/* User Documents, Favorites & Folders */}
+                    <Route path="documents" element={<UserDocuments />} />
+                    <Route path="favorites" element={<UserFavorites />} />
+                    <Route path="folders" element={<UserFolders />} />
+                    <Route path="folder/:folderId" element={<FolderView />} />
+                    <Route path="user/favorites" element={<UserFavorites />} />
+                    <Route path="user/folders" element={<UserFolders />} />
                 </Route>
 
                 {/* Admin Panel (Protected) */}

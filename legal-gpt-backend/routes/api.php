@@ -16,10 +16,14 @@ use App\Http\Controllers\Api\Admin\PromptController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\InstructionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Api\FolderController;
+use App\Http\Controllers\Api\FavoriteController;
+
 
 // --- 1. Public Routes ---
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/admin/login', [AuthController::class, 'adminLogin']);
 Route::post('/chat/ask', [ChatController::class, 'ask']);
 
 // --- 2. Authenticated User Routes (Sanctum) ---
@@ -29,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Chat History
     Route::get('/user/chats', [ChatController::class, 'userChats']);
+    Route::delete('/user/chats/{chat}', [ChatController::class, 'destroy']); // <-- Zid hadi hda userChats
     
     // Document Generation for normal users
     Route::post('/generate-document', [DocumentGenerationController::class, 'generate']);
@@ -36,6 +41,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // User Documents
     Route::get('/user/documents', [UserDocumentController::class, 'index']);
     Route::post('/user/documents', [UserDocumentController::class, 'store']);
+    // Folders API
+    Route::get('/user/folders', [FolderController::class, 'index']);
+    Route::get('/user/folders/{id}', [FolderController::class, 'show']);
+    Route::post('/user/folders', [FolderController::class, 'store']);
+    Route::delete('/user/folders/{id}', [FolderController::class, 'destroy']);
+
+    // Favorites API
+    Route::get('/user/favorites', [FavoriteController::class, 'index']);
+    Route::post('/user/favorites/toggle', [FavoriteController::class, 'toggle']);
 });
 
 // --- 3. Protected & Admin Routes ---

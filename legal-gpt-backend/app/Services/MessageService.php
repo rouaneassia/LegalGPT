@@ -14,8 +14,8 @@ class MessageService
     public function getOrCreate(?int $chatId = null): Chat
     {
         if ($chatId) {
-
-            $chat = Chat::find($chatId);
+            $chat = Chat::where('user_id', auth('sanctum')->id())
+                ->find($chatId);
 
             if ($chat) {
                 return $chat;

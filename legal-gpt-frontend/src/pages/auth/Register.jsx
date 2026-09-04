@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import API from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
     const [step, setStep] = useState(1);
@@ -9,6 +10,7 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleNextStep = (e) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ export default function Register() {
         e.preventDefault();
         try {
             const response = await API.post('/register', { name, email, password });
-            localStorage.setItem('token', response.data.token);
+            login(response.data.user, response.data.token);
             navigate('/chat');
         } catch (err) {
             setError(err.response?.data?.message || 'Erreur lors de l’inscription.');

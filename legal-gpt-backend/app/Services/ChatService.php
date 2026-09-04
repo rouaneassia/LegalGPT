@@ -14,6 +14,7 @@ class ChatService
         protected LanguageService $languageService,
         protected MessageService $messageService,
         protected ConversationContextService $contextService,
+        protected FolderAssignmentService $folderAssignmentService,
     ) {
     }
 
@@ -43,6 +44,11 @@ class ChatService
         // 2. Créer ou récupérer la conversation
         // ---------------------------------------------------------
         $chat = $this->messageService->getOrCreate($chatId);
+        $this->folderAssignmentService->assign(
+            $chat,
+            $question,
+            (int) auth('sanctum')->id()
+        );
 
         // ---------------------------------------------------------
         // 3. Détecter la langue de la question

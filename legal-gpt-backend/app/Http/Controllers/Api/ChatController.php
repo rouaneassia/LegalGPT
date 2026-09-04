@@ -47,4 +47,15 @@ class ChatController extends Controller
 
         return response()->json($chats);
     }
+    public function destroy(Chat $chat): JsonResponse
+{
+    // Vérifiye wach l-chat kay-tamelkoha l-user l-m-connecté
+    if ($chat->user_id !== request()->user()->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $chat->delete();
+
+    return response()->json(['message' => 'Conversation supprimée avec succès']);
+}
 }
